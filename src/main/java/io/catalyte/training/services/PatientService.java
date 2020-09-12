@@ -1,8 +1,8 @@
 package io.catalyte.training.services;
 
 
-import io.catalyte.training.entitites.Patient;
-import java.util.List;
+    import io.catalyte.training.entitites.Patient;
+    import java.util.List;
 
 /**
  * patient service interface with crud methods for a patient
