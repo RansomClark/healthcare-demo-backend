@@ -1,7 +1,10 @@
 package io.catalyte.training.data;
 
+import io.catalyte.training.entitites.Encounter;
 import io.catalyte.training.entitites.Patient;
+import io.catalyte.training.repositories.EncounterRepository;
 import io.catalyte.training.repositories.PatientRepository;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -14,6 +17,12 @@ public class DataLoader implements CommandLineRunner {
 
   @Autowired
   private PatientRepository patientRepository;
+
+  @Autowired
+  private EncounterRepository encounterRepository;
+
+  private Encounter encounterOne;
+  private Encounter encounterTwo;
 
   private Patient patientOne;
   private Patient patientTwo;
@@ -28,6 +37,7 @@ public class DataLoader implements CommandLineRunner {
   public void run(String... args) throws Exception {
 
     loadPatients();
+    loadEncounters();
 
   }
 
@@ -76,5 +86,22 @@ public class DataLoader implements CommandLineRunner {
     patientRepository.save(patientTwo);
 
 
+  }
+
+  private void loadEncounters() {
+    encounterOne= new Encounter(
+        1L, 1L, "new encounter", "N3W 3C3", "New Hospital",
+        "123.456.789-00", "Z99", 100, 10, "chiefComplaint", 100,
+        100, 100, new Date()
+    );
+
+    encounterTwo= new Encounter(
+        2L, 1L, "notes2", "visitCode2", "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+    //save patients
+    encounterRepository.save(encounterOne);
+    encounterRepository.save(encounterTwo);
   }
 }

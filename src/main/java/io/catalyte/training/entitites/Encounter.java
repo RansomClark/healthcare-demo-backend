@@ -47,6 +47,9 @@ public class Encounter {
   private String icd10;
 
   @Required
+  private Number totalCost;
+
+  @Required
   private Number copay;
 
   @Required
@@ -66,8 +69,8 @@ public class Encounter {
   }
 
   public Encounter(Long id, Long patientId, String notes, String visitCode, String provider,
-      String billingCode, String icd10, Number copay, String chiefComplaint, Number pulse,
-      Number systolic, Number diastolic, Date date) {
+      String billingCode, String icd10, Number totalCost, Number copay,
+      String chiefComplaint, Number pulse, Number systolic, Number diastolic, Date date) {
     this.id = id;
     this.patientId = patientId;
     this.notes = notes;
@@ -75,12 +78,21 @@ public class Encounter {
     this.provider = provider;
     this.billingCode = billingCode;
     this.icd10 = icd10;
+    this.totalCost = totalCost;
     this.copay = copay;
     this.chiefComplaint = chiefComplaint;
     this.pulse = pulse;
     this.systolic = systolic;
     this.diastolic = diastolic;
     this.date = date;
+  }
+
+  public Number getTotalCost() {
+    return totalCost;
+  }
+
+  public void setTotalCost(Number totalCost) {
+    this.totalCost = totalCost;
   }
 
   public Long getId() {
@@ -203,6 +215,7 @@ public class Encounter {
         Objects.equals(getProvider(), encounter.getProvider()) &&
         Objects.equals(getBillingCode(), encounter.getBillingCode()) &&
         Objects.equals(getIcd10(), encounter.getIcd10()) &&
+        Objects.equals(getTotalCost(), encounter.getTotalCost()) &&
         Objects.equals(getCopay(), encounter.getCopay()) &&
         Objects.equals(getChiefComplaint(), encounter.getChiefComplaint()) &&
         Objects.equals(getPulse(), encounter.getPulse()) &&
@@ -215,8 +228,8 @@ public class Encounter {
   public int hashCode() {
     return Objects
         .hash(getId(), getPatientId(), getNotes(), getVisitCode(), getProvider(), getBillingCode(),
-            getIcd10(), getCopay(), getChiefComplaint(), getPulse(), getSystolic(), getDiastolic(),
-            getDate());
+            getIcd10(), getTotalCost(), getCopay(), getChiefComplaint(), getPulse(), getSystolic(),
+            getDiastolic(), getDate());
   }
 
   @JsonIgnore
@@ -228,6 +241,7 @@ public class Encounter {
         Objects.isNull(provider) &&
         Objects.isNull(billingCode) &&
         Objects.isNull(icd10) &&
+        Objects.isNull(totalCost) &&
         Objects.isNull(copay) &&
         Objects.isNull(chiefComplaint) &&
         Objects.isNull(pulse) &&
