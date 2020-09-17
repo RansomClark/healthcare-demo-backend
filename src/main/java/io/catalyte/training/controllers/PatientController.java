@@ -37,7 +37,6 @@ public class PatientController {
   EncounterService encounterService;
 
 
-
   /**
    * gives me all patients if I pass a null patient or patients matching an example with non-null
    * patient
@@ -85,7 +84,8 @@ public class PatientController {
   @ApiOperation("Adds a new patient to the database")
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "CREATED", response = Patient.class),
-      @ApiResponse(code = 400, message = "BAD REQUEST")
+      @ApiResponse(code = 400, message = "BAD REQUEST"),
+      @ApiResponse(code = 409, message = "CONFLICT")
   })
   public ResponseEntity<Patient> addPatient(@Valid @RequestBody Patient patient)
       throws Exception {
@@ -96,7 +96,7 @@ public class PatientController {
   /**
    * Update patient by id patient.
    *
-   * @param id       the id of the patient to be updated from the path variable
+   * @param id      the id of the patient to be updated from the path variable
    * @param patient the patient's new information from the request body
    * @return the patient if correctly input
    */
@@ -105,6 +105,7 @@ public class PatientController {
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Patient.class),
       @ApiResponse(code = 404, message = "NOT FOUND"),
+      @ApiResponse(code = 409, message = "CONFLICT"),
       @ApiResponse(code = 400, message = "BAD REQUEST")
   })
   public ResponseEntity<Patient> updatePatientById(@PathVariable Long id,
@@ -124,11 +125,11 @@ public class PatientController {
   @ApiResponses(value = {
       @ApiResponse(code = 204, message = "NO CONTENT"),
       @ApiResponse(code = 404, message = "NOT FOUND"),
-      @ApiResponse(code= 409, message="CONFLICT")
+      @ApiResponse(code = 409, message = "CONFLICT")
   })
   public ResponseEntity deletePatientById(@PathVariable Long id) throws Exception {
 
-    if(encounterService.queryEncountersByPatientId(id).size() != 0){
+    if (encounterService.queryEncountersByPatientId(id).size() != 0) {
       return new ResponseEntity(HttpStatus.CONFLICT);
     }
     patientService.deletePatientById(id);
@@ -143,12 +144,14 @@ public class PatientController {
    * @return List of encounters
    * @throws Exception
    */
-  @GetMapping(value="/{id}/encounters")
+  @GetMapping(value = "/{id}/encounters")
+
   @ApiOperation("Gets all encounters with a particular patient Id")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Encounter.class)
   })
-  public ResponseEntity<List<Encounter>> queryEncountersByPatientId(@PathVariable Long id) throws Exception {
+  public ResponseEntity<List<Encounter>> queryEncountersByPatientId(@PathVariable Long id)
+      throws Exception {
 
     return new ResponseEntity<>(encounterService.queryEncountersByPatientId(id), HttpStatus.OK);
 
@@ -178,11 +181,12 @@ public class PatientController {
    * @param encounter the patient from the request body being added
    * @return the encounter if correctly added
    */
-  @PostMapping(value= "/*/encounters")
+  @PostMapping(value = "/{patientId}/encounters")
   @ApiOperation("Adds a new encounter to the database")
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "CREATED", response = Encounter.class),
-      @ApiResponse(code = 400, message = "BAD REQUEST")
+      @ApiResponse(code = 400, message = "BAD REQUEST"),
+      @ApiResponse(code = 409, message = "CONFLICT")
   })
   public ResponseEntity<Encounter> addEncounter(@Valid @RequestBody Encounter encounter)
       throws Exception {
@@ -193,15 +197,16 @@ public class PatientController {
   /**
    * Update encounter by id encounter.
    *
-   * @param id       the id of the encounter to be updated from the path variable
+   * @param id        the id of the encounter to be updated from the path variable
    * @param encounter the encounter's new information from the request body
    * @return the encounter if correctly input
    */
-  @PutMapping(value = "/*/encounters{id}")
+  @PutMapping(value = "/{patientId}/encounters/{id}")
   @ApiOperation("Updates a Encounter by Id")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Encounter.class),
       @ApiResponse(code = 404, message = "NOT FOUND"),
+      @ApiResponse(code = 409, message = "CONFLICT"),
       @ApiResponse(code = 400, message = "BAD REQUEST")
   })
   public ResponseEntity<Encounter> updateEncounterById(@PathVariable Long id,
@@ -216,7 +221,7 @@ public class PatientController {
    *
    * @param id the encounter's id from the path variable
    */
-  @DeleteMapping(value = "/*/encounters{id}")
+  @DeleteMapping(value = "/{patientId}/encounters/{id}")
   @ApiOperation("Deletes a Encounter by Id")
   @ApiResponses(value = {
       @ApiResponse(code = 204, message = "NO CONTENT"),

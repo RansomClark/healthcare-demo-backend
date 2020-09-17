@@ -1,5 +1,4 @@
-# Garden Center API Project
-* This project models a garden center with a Spring REST API and it uses a three-layered architecture with presentation, service, and data layers.
+# Ransom Final Backend Project
 
 ## Data
 
@@ -17,8 +16,8 @@
 * Can also be run subsequently in the top right corner green play symbol.
 
 ## Postman
-* The complete postman collection for this example can be found here: https://www.getpostman.com/collections/5b71dd2a44fbadf58e2d
-* Demonstrates all of the 2XX and 4XX functional requirements for GET, POST, PUT, and DELETE methods for these entities: User, Product, Patient, Order.
+* The complete postman collection for this example can be found here: https://www.getpostman.com/collections/96f84f7bea9960877612
+* Demonstrates all of the 2XX and 4XX functional requirements for GET, POST, PUT, and DELETE methods for Patients and Encounters
 
 ## Testing
 

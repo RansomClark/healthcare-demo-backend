@@ -41,7 +41,9 @@ public class DataLoader implements CommandLineRunner {
 
   }
 
-
+  /**
+   * Sets properties of patients and loads 2 into the database
+   */
   private void loadPatients() {
 
     //create patients
@@ -80,7 +82,6 @@ public class DataLoader implements CommandLineRunner {
         "Female"
     );
 
-
     //save patients
     patientRepository.save(patientOne);
     patientRepository.save(patientTwo);
@@ -88,15 +89,18 @@ public class DataLoader implements CommandLineRunner {
 
   }
 
+  /**
+   * sets properties of encounters and loads them into the database
+   */
   private void loadEncounters() {
-    encounterOne= new Encounter(
+    encounterOne = new Encounter(
         1L, 1L, "new encounter", "N3W 3C3", "New Hospital",
         "123.456.789-00", "Z99", 100, 10, "chiefComplaint", 100,
         100, 100, new Date()
     );
 
-    encounterTwo= new Encounter(
-        2L, 1L, "notes2", "visitCode2", "provider2",
+    encounterTwo = new Encounter(
+        2L, 1L, "notes2", "N3W 2D2", "provider2",
         "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
         200, 200, new Date()
     );

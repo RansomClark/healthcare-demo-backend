@@ -9,8 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.catalyte.training.entitites.Encounter;
 import io.catalyte.training.entitites.Patient;
+import io.catalyte.training.repositories.EncounterRepository;
 import io.catalyte.training.repositories.PatientRepository;
+import java.util.Date;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -36,6 +39,9 @@ public class PatientControllerTest {
 
   @Autowired
   PatientRepository patientRepository;
+
+  @Autowired
+  EncounterRepository encounterRepository;
 
   @Autowired
   private static MockMvc mockMvc;
@@ -96,8 +102,6 @@ public class PatientControllerTest {
     patient4.setFirstName("name");
     patient4.setEmail("name@catalyte.io");
 
-
-
     String patientAsJson = mapper.writeValueAsString(patient4);
 
     String retType = mockMvc
@@ -118,12 +122,9 @@ public class PatientControllerTest {
 
     Patient patient4 = new Patient();
 
-
     patient4.setId(2L);
     patient4.setFirstName("Update");
-    patient4.setEmail("name@catalyte.io");
-
-
+    patient4.setEmail("name2@catalyte.io");
 
     String patientAsJson = mapper.writeValueAsString(patient4);
 
@@ -144,9 +145,26 @@ public class PatientControllerTest {
   @Test
   public void test6_deletePatient() throws Exception {
     mockMvc
-        .perform(delete(CONTEXT + "/3")
+        .perform(delete(CONTEXT + "/2")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
+  }
+
+  @Test
+  public void test1_queryEncountersByPatientId() throws Exception {
+
+    // Retrieve all encounters from database for a particular patient
+    String retType =
+        mockMvc
+            .perform(get(CONTEXT + "/1/encounters"))
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(status().isOk())
+            .andReturn()
+            .getResponse()
+            .getContentType();
+
+    Assert.assertEquals("application/json", retType);
+
   }
 
 

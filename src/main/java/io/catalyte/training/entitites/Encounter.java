@@ -1,6 +1,7 @@
 package io.catalyte.training.entitites;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,9 +17,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "encounter")
@@ -30,29 +35,40 @@ public class Encounter {
   private Long id;
 
   @Required
+  @NotNull
   private Long patientId;
 
   private String notes;
 
   @Required
+  @NotBlank
+  @Pattern(regexp = "^([A-Za-z]\\d[A-Za-z][\" \"]\\d[A-Za-z]\\d)", message = "Must be in the format of LDL DLD")
   private String visitCode;
 
   @Required
+  @NotBlank
   private String provider;
 
   @Required
+  @NotBlank
+  @Pattern(regexp = "^\\d{3}.\\d{3}.\\d{3}-\\d{2}", message = "Must be a valid billing code in DDD.DDD.DDD-DD")
   private String billingCode;
 
   @Required
+  @NotBlank
+  @Pattern(regexp = "^[A-Za-z]\\d{2}", message = "Must be in LDD format")
   private String icd10;
 
   @Required
+  @NotNull
   private Number totalCost;
 
   @Required
+  @NotNull
   private Number copay;
 
   @Required
+  @NotBlank
   private String chiefComplaint;
 
   private Number pulse;
@@ -62,6 +78,8 @@ public class Encounter {
   private Number diastolic;
 
   @Required
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date date;
 
   public Encounter() {

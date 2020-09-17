@@ -1,11 +1,20 @@
 package io.catalyte.training.entitites;
 
+import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_EMAIL;
+import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_MINIMUM;
+import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_ZIPCODE;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 
 @Entity
@@ -18,42 +27,58 @@ public class Patient {
   private Long id;
 
   @Required
+  @NotBlank
   private String firstName;
 
   @Required
+  @NotBlank
   private String lastName;
 
   @Required
+  @NotNull
+  @Pattern(regexp = "^\\d{3}-?\\d{2}-?\\d{4}$", message = "Must a valid social security number in XXX-XX-XXXX format")
   private String ssn;
 
   @Required
+  @NotBlank
+  @Pattern(regexp = ".+@.+\\..+", message = BAD_REQUEST_EMAIL)
   private String email;
 
   @Required
+  @NotBlank
   private String city;
 
   @Required
+  @NotBlank
   private String street;
 
   @Required
+  @NotBlank
   private String state;
 
   @Required
+  @NotBlank
+  @Pattern(regexp = "^\\d{5}(-\\d{4})?$", message = BAD_REQUEST_ZIPCODE)
   private String postal;
 
   @Required
+  @NotNull
   private Number age;
 
   @Required
+  @NotNull
   private Number height;
 
   @Required
+  @NotNull
   private Number weight;
 
   @Required
+  @NotBlank
   private String insurance;
 
   @Required
+  @NotBlank
   private String gender;
 
   public Patient() {

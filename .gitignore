@@ -76,3 +76,6 @@ target/
 /.idea/intellij-javadocs-4.0.1.xml
 /.idea/misc.xml
 /.idea/vcs.xml
+
+# Application yml
+./src/main/java/resources/application.yml

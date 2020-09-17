@@ -100,7 +100,7 @@ public class PatientServiceImpl implements PatientService {
   /**
    * Updates a patient with a specific id
    *
-   * @param id       the id of the patient to be updated
+   * @param id      the id of the patient to be updated
    * @param patient the patient's new information
    * @return the patient's new information
    */
@@ -119,7 +119,6 @@ public class PatientServiceImpl implements PatientService {
     if (!patient.getId().equals(id)) {
       throw new BadDataResponse(BAD_REQUEST_ID);
     }
-
 
     try {
 
@@ -168,7 +167,7 @@ public class PatientServiceImpl implements PatientService {
     try {
 
       // if a patient exists for that id, delete it
-      if (patientRepository.existsById(id)){
+      if (patientRepository.existsById(id)) {
         patientRepository.deleteById(id);
         return;
       }

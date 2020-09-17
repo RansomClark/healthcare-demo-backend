@@ -1,6 +1,7 @@
 package io.catalyte.training.services;
 
 import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_ID;
+import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_ENCOUNTER_NOT_FOUND;
 import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_PATIENT_NOT_FOUND;
 import static io.catalyte.training.constants.StringConstants.EMAIL_CONFLICT;
 
@@ -13,6 +14,7 @@ import io.catalyte.training.exceptions.ServiceUnavailable;
 import io.catalyte.training.exceptions.UniqueFieldViolation;
 import io.catalyte.training.repositories.EncounterRepository;
 import io.catalyte.training.repositories.EncounterRepository;
+import io.catalyte.training.repositories.PatientRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -24,6 +26,9 @@ public class EncounterServiceImpl implements EncounterService {
   @Autowired
   EncounterRepository encounterRepository;
 
+  @Autowired
+  PatientRepository patientRepository;
+
   /**
    * Gets encounters from the database
    *
@@ -33,14 +38,14 @@ public class EncounterServiceImpl implements EncounterService {
   public List<Encounter> queryEncountersByPatientId(Long id) {
 
     try {
-    Encounter testEncounter = new Encounter();
-    testEncounter.setPatientId(id);
+      Encounter testEncounter = new Encounter();
+      testEncounter.setPatientId(id);
 
-    Example<Encounter> encounterExample = Example.of(testEncounter);
+      Example<Encounter> encounterExample = Example.of(testEncounter);
 
-    List<Encounter> encounterList = encounterRepository.findAll(encounterExample);
+      List<Encounter> encounterList = encounterRepository.findAll(encounterExample);
 
-    return  encounterList;
+      return encounterList;
 
     } catch (Exception e) {
       throw new ServiceUnavailable(e);
@@ -66,7 +71,7 @@ public class EncounterServiceImpl implements EncounterService {
       throw new ServiceUnavailable(e);
     }
 
-    throw new ResourceNotFound(BAD_REQUEST_PATIENT_NOT_FOUND);
+    throw new ResourceNotFound(BAD_REQUEST_ENCOUNTER_NOT_FOUND);
 
   }
 
@@ -82,18 +87,19 @@ public class EncounterServiceImpl implements EncounterService {
     boolean stateIsValid;
 
     try {
-        return encounterRepository.save(encounter);
+      return encounterRepository.save(encounter);
     } catch (Exception e) {
       throw new ServiceUnavailable(e);
     }
   }
 
   /**
-   * Updates a encounter with a specific id
+   * update encounter by an id, throws bad request if id of the path doesn't match the body, throws not found status if
+   * an id isn't found
    *
-   * @param id       the id of the encounter to be updated
-   * @param encounter the encounter's new information
-   * @return the encounter's new information
+   * @param id
+   * @param encounter
+   * @return encounter
    */
   public Encounter updateEncounterById(Long id, Encounter encounter) {
 
@@ -104,25 +110,25 @@ public class EncounterServiceImpl implements EncounterService {
       throw new BadDataResponse(BAD_REQUEST_ID);
     }
 
-
     try {
 
-      // get the existing encounter from the database
+      // get the existing customer from the database
       existingEncounter = encounterRepository.findById(id).orElse(null);
-
-      if (existingEncounter != null) {
-
-          return encounterRepository.save(encounter);
-    }
-      else {
-        throw new ResourceNotFound(BAD_REQUEST_PATIENT_NOT_FOUND);
-      }
-
     } catch (Exception e) {
       throw new ServiceUnavailable(e);
     }
 
+    // if the encounter exists, call the addEncounter method to save it to the database
+    if (existingEncounter != null) {
+      return this.addEncounter(encounter);
+    }
+    else
+    {
+      throw new ResourceNotFound(BAD_REQUEST_ENCOUNTER_NOT_FOUND);
+    }
+
   }
+
 
   /**
    * Deletes a encounter with a specified id
@@ -134,7 +140,7 @@ public class EncounterServiceImpl implements EncounterService {
     try {
 
       // if a encounter exists for that id, delete it
-      if (encounterRepository.existsById(id)){
+      if (encounterRepository.existsById(id)) {
         encounterRepository.deleteById(id);
         return;
       }
@@ -143,7 +149,7 @@ public class EncounterServiceImpl implements EncounterService {
     }
 
     // if we made it to this point, return a 404
-    throw new ResourceNotFound(BAD_REQUEST_PATIENT_NOT_FOUND);
+    throw new ResourceNotFound(BAD_REQUEST_ENCOUNTER_NOT_FOUND);
   }
 }
 

@@ -34,10 +34,10 @@ public class PatientServiceImplTest {
   @InjectMocks
   PatientServiceImpl mockPatientServiceImpl;
 
-  List<Patient> customerList = new ArrayList<>();
+  List<Patient> patientList = new ArrayList<>();
 
 
-  Patient customerOne = new Patient();
+  Patient patientOne = new Patient();
 
 
   @Before
@@ -45,24 +45,24 @@ public class PatientServiceImplTest {
 
     MockitoAnnotations.initMocks(this);
 
-    customerOne.setId(1L);
-        customerOne.setEmail("hulk@gmail.com");
+    patientOne.setId(1L);
+        patientOne.setEmail("hulk@gmail.com");
 
-    customerList.add(customerOne);
+    patientList.add(patientOne);
 
 
     //when statements for happy paths
-    when(mockPatientRepository.findAll()).thenReturn(customerList);
+    when(mockPatientRepository.findAll()).thenReturn(patientList);
 
-    when(mockPatientRepository.findAll(any(Example.class))).thenReturn(customerList);
+    when(mockPatientRepository.findAll(any(Example.class))).thenReturn(patientList);
 
-    when(mockPatientRepository.findById(any(Long.class))).thenReturn(Optional.of(customerOne));
+    when(mockPatientRepository.findById(any(Long.class))).thenReturn(Optional.of(patientOne));
 
     when(mockPatientRepository.existsByEmail(any(String.class))).thenReturn(false);
 
     when(mockPatientRepository.existsById(any(Long.class))).thenReturn(true);
 
-    when(mockPatientRepository.save(any(Patient.class))).thenReturn(customerOne);
+    when(mockPatientRepository.save(any(Patient.class))).thenReturn(patientOne);
 
   }
 
@@ -71,16 +71,16 @@ public class PatientServiceImplTest {
 
     List<Patient> actualResult = mockPatientServiceImpl.queryPatients(new Patient());
 
-    Assert.assertEquals(customerList, actualResult);
+    Assert.assertEquals(patientList, actualResult);
 
   }
 
   @Test
   public void testQueryPatientsNonNullExample() {
 
-    List<Patient> actualResult = mockPatientServiceImpl.queryPatients(customerOne);
+    List<Patient> actualResult = mockPatientServiceImpl.queryPatients(patientOne);
 
-    Assert.assertEquals(customerList, actualResult);
+    Assert.assertEquals(patientList, actualResult);
 
   }
 
@@ -108,7 +108,7 @@ public class PatientServiceImplTest {
 
     Patient actualResult = mockPatientServiceImpl.getPatientById(1L);
 
-    Assert.assertEquals(customerOne, actualResult);
+    Assert.assertEquals(patientOne, actualResult);
 
   }
 
@@ -145,9 +145,9 @@ public class PatientServiceImplTest {
   @Test
   public void testAddPatientReturnsPatient() throws Exception {
 
-    Patient actualResult = mockPatientServiceImpl.addPatient(customerOne);
+    Patient actualResult = mockPatientServiceImpl.addPatient(patientOne);
 
-    Assert.assertEquals(customerOne, actualResult);
+    Assert.assertEquals(patientOne, actualResult);
 
   }
 
@@ -156,18 +156,10 @@ public class PatientServiceImplTest {
 
     when(mockPatientRepository.existsByEmail(any(String.class))).thenReturn(true);
 
-    Patient actualResult = mockPatientServiceImpl.addPatient(customerOne);
+    Patient actualResult = mockPatientServiceImpl.addPatient(patientOne);
 
   }
 
-  @Test(expected = BadDataResponse.class)
-  public void testAddPatientInvalidState() throws Exception {
-
-    customerOne.setState("ZX");
-
-    Patient actualResult = mockPatientServiceImpl.addPatient(customerOne);
-
-  }
 
   @Test(expected = ServiceUnavailable.class)
   public void testAddPatientDBError() throws Exception {
@@ -175,7 +167,7 @@ public class PatientServiceImplTest {
     when(mockPatientRepository.save(any(Patient.class)))
         .thenThrow(CannotCreateTransactionException.class);
 
-    Patient actualResult = mockPatientServiceImpl.addPatient(customerOne);
+    Patient actualResult = mockPatientServiceImpl.addPatient(patientOne);
 
   }
 
@@ -185,18 +177,18 @@ public class PatientServiceImplTest {
     when(mockPatientRepository.save(any(Patient.class)))
         .thenThrow(UnexpectedTypeException.class);
 
-    Patient actualResult = mockPatientServiceImpl.addPatient(customerOne);
+    Patient actualResult = mockPatientServiceImpl.addPatient(patientOne);
 
   }
 
   @Test
   public void testUpdatePatientByIdReturnsPatient() throws Exception {
 
-    customerOne.setFirstName("Hollywood Hulk Hogan");
+    patientOne.setFirstName("Hollywood Hulk Hogan");
 
-    mockPatientServiceImpl.updatePatientById(1L, customerOne);
+    mockPatientServiceImpl.updatePatientById(1L, patientOne);
 
-    Assert.assertSame("Hollywood Hulk Hogan", customerOne.getFirstName());
+    Assert.assertSame("Hollywood Hulk Hogan", patientOne.getFirstName());
 
   }
 
@@ -205,9 +197,9 @@ public class PatientServiceImplTest {
 
     when(mockPatientRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
-    customerOne.setFirstName("Hollywood Hulk Hogan");
+    patientOne.setFirstName("Hollywood Hulk Hogan");
 
-    Patient result = mockPatientServiceImpl.updatePatientById(1L, customerOne);
+    Patient result = mockPatientServiceImpl.updatePatientById(1L, patientOne);
 
     Assert.assertNull(result);
 
@@ -216,20 +208,12 @@ public class PatientServiceImplTest {
   @Test(expected = BadDataResponse.class)
   public void testUpdatePatientByIdIdDoesNotMatch() throws Exception {
 
-    customerOne.setId(3L);
+    patientOne.setId(3L);
 
-    Patient result = mockPatientServiceImpl.updatePatientById(1L, customerOne);
-
-  }
-
-  @Test(expected = BadDataResponse.class)
-  public void testUpdatePatientByIdInvalidState() throws Exception {
-
-    customerOne.setState("ZX");
-
-    Patient result = mockPatientServiceImpl.updatePatientById(1L, customerOne);
+    Patient result = mockPatientServiceImpl.updatePatientById(1L, patientOne);
 
   }
+
 
   @Test(expected = UniqueFieldViolation.class)
   public void testUpdatePatientByIdEmailConflict() throws Exception {
@@ -253,9 +237,9 @@ public class PatientServiceImplTest {
     when(mockPatientRepository.findById(any(Long.class)))
         .thenThrow(CannotCreateTransactionException.class);
 
-    customerOne.setFirstName("Hollywood Hulk Hogan");
+    patientOne.setFirstName("Hollywood Hulk Hogan");
 
-    Patient result = mockPatientServiceImpl.updatePatientById(1L, customerOne);
+    Patient result = mockPatientServiceImpl.updatePatientById(1L, patientOne);
 
   }
 
@@ -265,9 +249,9 @@ public class PatientServiceImplTest {
     when(mockPatientRepository.findById(any(Long.class)))
         .thenThrow(UnexpectedTypeException.class);
 
-    customerOne.setFirstName("Hollywood Hulk Hogan");
+    patientOne.setFirstName("Hollywood Hulk Hogan");
 
-    Patient result = mockPatientServiceImpl.updatePatientById(1L, customerOne);
+    Patient result = mockPatientServiceImpl.updatePatientById(1L, patientOne);
 
   }
 
