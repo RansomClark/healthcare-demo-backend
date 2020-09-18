@@ -48,14 +48,12 @@ public class EncounterServiceImplTest {
 
     encounterList.add(encounterOne);
 
-
     //when statements for happy paths
     when(mockEncounterRepository.findAll()).thenReturn(encounterList);
 
     when(mockEncounterRepository.findAll(any(Example.class))).thenReturn(encounterList);
 
     when(mockEncounterRepository.findById(any(Long.class))).thenReturn(Optional.of(encounterOne));
-    
 
     when(mockEncounterRepository.existsById(any(Long.class))).thenReturn(true);
 
@@ -129,8 +127,7 @@ public class EncounterServiceImplTest {
     Assert.assertEquals(encounterOne, actualResult);
 
   }
-  
-  
+
 
   @Test(expected = ServiceUnavailable.class)
   public void testAddEncounterDBError() throws Exception {
@@ -173,7 +170,6 @@ public class EncounterServiceImplTest {
   }
 
 
-
   @Test(expected = ServiceUnavailable.class)
   public void testUpdateEncounterByIdDBError() throws Exception {
 
@@ -182,7 +178,7 @@ public class EncounterServiceImplTest {
 
     encounterOne.setNotes("Hollywood Hulk Hogan");
 
-    Encounter result = mockEncounterServiceImpl.updateEncounterById( 1L, encounterOne);
+    Encounter result = mockEncounterServiceImpl.updateEncounterById(1L, encounterOne);
 
   }
 
@@ -213,7 +209,8 @@ public class EncounterServiceImplTest {
 
     when(mockEncounterRepository.existsById(any(Long.class))).thenReturn(false);
 
-    doThrow(ResponseStatusException.class).when(mockEncounterRepository).deleteById(any(Long.class));
+    doThrow(ResponseStatusException.class).when(mockEncounterRepository)
+        .deleteById(any(Long.class));
 
     mockEncounterServiceImpl.deleteEncounterById(1L);
 

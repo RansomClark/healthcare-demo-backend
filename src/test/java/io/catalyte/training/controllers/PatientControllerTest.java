@@ -231,7 +231,8 @@ public class PatientControllerTest {
   @Test
   public void test5_updateEncounter() throws Exception {
 
-    Encounter encounter5 = new Encounter(4L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2", "provider2",
+    Encounter encounter5 = new Encounter(4L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2",
+        "provider2",
         "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
         200, 200, new Date()
     );
@@ -244,7 +245,8 @@ public class PatientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(encounterAsJson))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.notes").value("BADA BING BADA BOOM TEST PASSES"))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.notes").value("BADA BING BADA BOOM TEST PASSES"))
             .andReturn()
             .getResponse()
             .getContentType();

@@ -7,6 +7,20 @@
 	* POSTGRES_USER=user
 	* POSTGRES_PASSWORD=root
 	* PORT=5432
+	
+*Create an application.yml in main/resources with the following lines
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: user
+    password: root
+    driverClassName: org.postgresql.Driver
 
 * The DataLoader class in the data package will load a few examples of each entity (User, Product, Patient, Order, Items, Address) into the database after the service starts up.
 

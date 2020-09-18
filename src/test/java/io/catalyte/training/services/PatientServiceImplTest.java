@@ -46,10 +46,9 @@ public class PatientServiceImplTest {
     MockitoAnnotations.initMocks(this);
 
     patientOne.setId(1L);
-        patientOne.setEmail("hulk@gmail.com");
+    patientOne.setEmail("hulk@gmail.com");
 
     patientList.add(patientOne);
-
 
     //when statements for happy paths
     when(mockPatientRepository.findAll()).thenReturn(patientList);
