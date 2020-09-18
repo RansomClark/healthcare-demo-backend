@@ -96,11 +96,23 @@ public class PatientControllerTest {
   @Test
   public void test4_addPatient() throws Exception {
 
-    Patient patient4 = new Patient();
+    Patient patient4 = new Patient(
 
-    patient4.setId(4L);
-    patient4.setFirstName("name");
-    patient4.setEmail("name@catalyte.io");
+        4L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "markmarky@email13.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
 
     String patientAsJson = mapper.writeValueAsString(patient4);
 
@@ -120,21 +132,32 @@ public class PatientControllerTest {
   @Test
   public void test5_updatePatient() throws Exception {
 
-    Patient patient4 = new Patient();
+    Patient patient4 = new Patient(
 
-    patient4.setId(2L);
-    patient4.setFirstName("Update");
-    patient4.setEmail("name2@catalyte.io");
-
+        1L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "newEmail@email.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
     String patientAsJson = mapper.writeValueAsString(patient4);
 
     String retType =
         mockMvc
-            .perform(put(CONTEXT + "/2", patientAsJson)
+            .perform(put(CONTEXT + "/1", patientAsJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(patientAsJson))
             .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("newEmail@email.com"))
             .andReturn()
             .getResponse()
             .getContentType();
@@ -165,6 +188,76 @@ public class PatientControllerTest {
 
     Assert.assertEquals("application/json", retType);
 
+  }
+
+  @Test
+  public void test3_getEncounter() throws Exception {
+
+    // Retrieve the first patient and confirm it matches what we posted
+    String retType = mockMvc
+        .perform(get(CONTEXT + "/1/encounters/4"))
+        .andExpect(jsonPath("$.chiefComplaint").value("chief Complaint2"))
+        .andExpect(status().isOk())
+        .andReturn()
+        .getResponse()
+        .getContentType();
+
+    Assert.assertEquals("application/json", retType);
+  }
+
+  @Test
+  public void test4_addEncounter() throws Exception {
+
+    Encounter encounter5 = new Encounter(5L, 2L, "notes2", "N3W 2D2", "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String patientAsJson = mapper.writeValueAsString(encounter5);
+
+    String retType = mockMvc
+        .perform(post(CONTEXT + "/2/encounters")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.*", hasSize(14)))
+        .andReturn()
+        .getResponse()
+        .getContentType();
+
+    Assert.assertEquals("application/json", retType);
+  }
+
+  @Test
+  public void test5_updateEncounter() throws Exception {
+
+    Encounter encounter5 = new Encounter(4L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2", "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String encounterAsJson = mapper.writeValueAsString(encounter5);
+
+    String retType =
+        mockMvc
+            .perform(put(CONTEXT + "/1/encounters/4", encounterAsJson)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(encounterAsJson))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.notes").value("BADA BING BADA BOOM TEST PASSES"))
+            .andReturn()
+            .getResponse()
+            .getContentType();
+
+    Assert.assertEquals("application/json", retType);
+  }
+
+  @Test
+  public void test6_deleteEncounter() throws Exception {
+    mockMvc
+        .perform(delete(CONTEXT + "/1/encounters/4")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNoContent());
   }
 
 
