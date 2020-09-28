@@ -26,6 +26,7 @@ public class DataLoader implements CommandLineRunner {
 
   private Patient patientOne;
   private Patient patientTwo;
+  private Patient patientThree;
 
   /**
    * class which loads all entities
@@ -81,10 +82,28 @@ public class DataLoader implements CommandLineRunner {
         "Blue Cross Blue Shield",
         "Female"
     );
+    patientThree = new Patient(
+
+        3L,
+        "Luke",
+        "Luchas",
+        "333-33-3333",
+        "lukeluchas@email.com",
+        "Lukesville",
+        "Luke Street",
+        "IL",
+        "33333",
+        33,
+        333,
+        333,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
 
     //save patients
     patientRepository.save(patientOne);
     patientRepository.save(patientTwo);
+    patientRepository.save(patientThree);
 
 
   }

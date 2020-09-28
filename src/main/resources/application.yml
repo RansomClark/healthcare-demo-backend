@@ -1,12 +1,12 @@
 spring:
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-  datasource:
-    platform: postgres
-    url: jdbc:postgresql://localhost:5433/postgres
-    username: postgres
-    password: Leamming3245
-    driverClassName: org.postgresql.Driver
+                       jpa:
+                         database: POSTGRESQL
+                         show-sql: true
+                         hibernate:
+                           ddl-auto: create-drop
+                       datasource:
+                         platform: postgres
+                         url: jdbc:postgresql://localhost:5433/postgres
+                         username: postgres
+                         password: Leamming3245
+                         driverClassName: org.postgresql.Driver

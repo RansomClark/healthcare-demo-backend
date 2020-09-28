@@ -1,17 +1,13 @@
 package io.catalyte.training.entitites;
 
 import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_EMAIL;
-import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_MINIMUM;
 import static io.catalyte.training.constants.StringConstants.BAD_REQUEST_ZIPCODE;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -28,10 +24,12 @@ public class Patient {
 
   @Required
   @NotBlank
+  @Pattern(regexp ="^[a-zA-Z]+$", message = "Must be one or more letters")
   private String firstName;
 
   @Required
   @NotBlank
+  @Pattern(regexp ="^[a-zA-Z]+$", message = "Must be one or more letters")
   private String lastName;
 
   @Required
@@ -54,6 +52,7 @@ public class Patient {
 
   @Required
   @NotBlank
+  @Pattern(regexp = "^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$", message = "Must be a valid U.S. state")
   private String state;
 
   @Required
@@ -79,6 +78,7 @@ public class Patient {
 
   @Required
   @NotBlank
+  @Pattern(regexp = "^Male$|^Female$|^Other$", message = "Must be `Male` or `Female` or `Other`")
   private String gender;
 
   public Patient() {

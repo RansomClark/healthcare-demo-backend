@@ -1,6 +1,8 @@
 package io.catalyte.training.controllers;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -11,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.catalyte.training.entitites.Encounter;
 import io.catalyte.training.entitites.Patient;
+import io.catalyte.training.exceptions.ResourceNotFound;
 import io.catalyte.training.repositories.EncounterRepository;
 import io.catalyte.training.repositories.PatientRepository;
 import java.util.Date;
@@ -29,6 +32,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
@@ -168,7 +172,7 @@ public class PatientControllerTest {
   @Test
   public void test6_deletePatient() throws Exception {
     mockMvc
-        .perform(delete(CONTEXT + "/2")
+        .perform(delete(CONTEXT + "/3")
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
@@ -216,7 +220,7 @@ public class PatientControllerTest {
     String patientAsJson = mapper.writeValueAsString(encounter5);
 
     String retType = mockMvc
-        .perform(post(CONTEXT + "/2/encounters")
+        .perform(post(CONTEXT + "/1/encounters")
             .contentType(MediaType.APPLICATION_JSON)
             .content(patientAsJson))
         .andExpect(status().isCreated())
@@ -262,5 +266,267 @@ public class PatientControllerTest {
         .andExpect(status().isNoContent());
   }
 
+  @Test
+  public void test7_getPatient404() throws Exception {
+      mockMvc
+        .perform(get(CONTEXT + "/8"))
+        .andExpect(status().isNotFound())
+        .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFound))
+        .andExpect(result -> assertEquals("The patient does not exist in the database", result.getResolvedException().getMessage()));
+  }
+
+  @Test
+  public void test8_addPatient400() throws Exception {
+
+    Patient patient4 = new Patient(
+
+        4L,
+        "Mark",
+        "Marky",
+        "111-111",
+        "markmarky@email13.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
+
+    String patientAsJson = mapper.writeValueAsString(patient4);
+
+    mockMvc
+        .perform(post(CONTEXT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void test9_addPatient409() throws Exception {
+
+    Patient patient4 = new Patient(
+
+        4L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "matthewmatthias@email.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
+
+    String patientAsJson = mapper.writeValueAsString(patient4);
+
+    mockMvc
+        .perform(post(CONTEXT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void test10_updatePatient404() throws Exception {
+
+    Patient patient4 = new Patient(
+
+        8L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "markmarky@email13.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
+
+    String patientAsJson = mapper.writeValueAsString(patient4);
+
+    mockMvc
+        .perform(put(CONTEXT + "/8")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isNotFound())
+        .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFound))
+        .andExpect(result -> assertEquals("The patient does not exist in the database", result.getResolvedException().getMessage()));
+  }
+
+  @Test
+  public void test11_updatePatient400() throws Exception {
+
+    Patient patient4 = new Patient(
+
+        4L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "markmarky@email13.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
+
+    String patientAsJson = mapper.writeValueAsString(patient4);
+
+    mockMvc
+        .perform(put(CONTEXT + "/8")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isBadRequest());
+
+  }
+
+  @Test
+  public void test12_updatePatient409() throws Exception {
+
+    Patient patient4 = new Patient(
+
+        1L,
+        "Mark",
+        "Marky",
+        "111-11-1111",
+        "matthewmatthias@email.com",
+        "Marksville",
+        "Mark Street",
+        "IL",
+        "11111",
+        11,
+        111,
+        111,
+        "Blue Cross Blue Shield",
+        "Male"
+    );
+
+    String patientAsJson = mapper.writeValueAsString(patient4);
+
+    mockMvc
+        .perform(put(CONTEXT + "/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isConflict());
+
+  }
+
+  @Test
+  public void test13_deletePatient404() throws Exception {
+    mockMvc
+        .perform(delete(CONTEXT + "/8")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFound))
+        .andExpect(result -> assertEquals("The patient does not exist in the database", result.getResolvedException().getMessage()));
+  }
+
+  @Test
+  public void test14_deletePatient409() throws Exception {
+    mockMvc
+        .perform(delete(CONTEXT + "/1")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void test15_getEncounterById404() throws Exception {
+    mockMvc
+        .perform(get(CONTEXT +"/1/encounters/8"))
+        .andExpect(status().isNotFound())
+        .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResourceNotFound))
+        .andExpect(result -> assertEquals("The encounter does not exist in the database", result.getResolvedException().getMessage()));
+  }
+
+  @Test
+  public void test16_addEncounter400() throws Exception {
+
+    Encounter encounter5 = new Encounter(4L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 222",
+        "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String patientAsJson = mapper.writeValueAsString(encounter5);
+
+    mockMvc
+        .perform(post(CONTEXT + "/1/encounters")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void test17_updateEncounter400() throws Exception{
+    Encounter encounter5 = new Encounter(2L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2",
+        "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String patientAsJson = mapper.writeValueAsString(encounter5);
+
+    mockMvc
+        .perform(put(CONTEXT + "/1/encounters/4")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isBadRequest());
+  }
+
+
+
+  @Test
+  public void test18_updateEncounter404() throws Exception {
+    Encounter encounter5 = new Encounter(8L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2",
+        "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String patientAsJson = mapper.writeValueAsString(encounter5);
+
+    mockMvc
+        .perform(put(CONTEXT + "/1/encounters/8")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isNotFound());
+
+  }
+
+  @Test
+  public void test19_deleteEncounter409() throws Exception {
+    Encounter encounter5 = new Encounter(8L, 1L, "BADA BING BADA BOOM TEST PASSES", "N3W 2D2",
+        "provider2",
+        "123.456.789-00", "I10", 200, 20, "chief Complaint2", 200,
+        200, 200, new Date()
+    );
+
+    String patientAsJson = mapper.writeValueAsString(encounter5);
+
+    mockMvc
+        .perform(delete(CONTEXT + "/1/encounters/8")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(patientAsJson))
+        .andExpect(status().isNotFound());
+
+  }
 
 }

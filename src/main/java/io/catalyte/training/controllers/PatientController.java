@@ -186,7 +186,6 @@ public class PatientController {
   @ApiResponses(value = {
       @ApiResponse(code = 201, message = "CREATED", response = Encounter.class),
       @ApiResponse(code = 400, message = "BAD REQUEST"),
-      @ApiResponse(code = 409, message = "CONFLICT")
   })
   public ResponseEntity<Encounter> addEncounter(@Valid @RequestBody Encounter encounter)
       throws Exception {
@@ -206,7 +205,6 @@ public class PatientController {
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "OK", response = Encounter.class),
       @ApiResponse(code = 404, message = "NOT FOUND"),
-      @ApiResponse(code = 409, message = "CONFLICT"),
       @ApiResponse(code = 400, message = "BAD REQUEST")
   })
   public ResponseEntity<Encounter> updateEncounterById(@PathVariable Long id,

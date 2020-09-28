@@ -2,12 +2,12 @@
 <Configuration status="WARN" monitorInterval="30">
   <Properties>
     <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss} %p %C{1} - %M %m%n</Property>
-    <Property name="APP_LOG_ROOT">c:/temp</Property>
+    <Property name="APP_LOG_ROOT">/..</Property>
   </Properties>
   <Appenders>
     <RollingFile name="rollingLog"
-      fileName="${APP_LOG_ROOT}/garden_api_project/application.log"
-      filePattern="${APP_LOG_ROOT}/garden_api_project/application-%d{yyyy-MM-dd}-%i.log">
+      fileName="${APP_LOG_ROOT}/ransom-final-project/application.log"
+      filePattern="${APP_LOG_ROOT}/ransom-final-project/application-%d{yyyy-MM-dd}-%i.log">
       <PatternLayout pattern="${LOG_PATTERN}"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10 MB"/>

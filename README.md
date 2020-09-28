@@ -8,7 +8,8 @@
 	* POSTGRES_PASSWORD=root
 	* PORT=5432
 	
-*Create an application.yml in main/resources with the following lines
+*Create an application.yml in main/resources with the following lines:
+
 spring:
   jpa:
     database: POSTGRESQL

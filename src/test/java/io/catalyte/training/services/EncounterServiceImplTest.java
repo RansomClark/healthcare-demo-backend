@@ -9,7 +9,6 @@ import io.catalyte.training.entitites.Encounter;
 import io.catalyte.training.exceptions.BadDataResponse;
 import io.catalyte.training.exceptions.ResourceNotFound;
 import io.catalyte.training.exceptions.ServiceUnavailable;
-import io.catalyte.training.exceptions.UniqueFieldViolation;
 import io.catalyte.training.repositories.EncounterRepository;
 import java.util.ArrayList;
 import java.util.List;

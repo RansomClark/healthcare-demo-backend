@@ -83,9 +83,6 @@ public class EncounterServiceImpl implements EncounterService {
    */
   public Encounter addEncounter(Encounter encounter) {
 
-    boolean emailAlreadyExists;
-    boolean stateIsValid;
-
     try {
       return encounterRepository.save(encounter);
     } catch (Exception e) {
